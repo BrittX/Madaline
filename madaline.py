@@ -2,6 +2,7 @@
 File for the madaline neural network
 """
 import madmenu as mm
+import random
 
 """
 class for Training Net
@@ -11,19 +12,47 @@ class Training(object):
 		self.inputs = inputs
 		self.outputs = outputs
 		self.pairs = pairs
+		self.tset = tsets # Store training set and their outputs aka my s and t
 
 		# Set inputs and their weights
-        # Set initial weight to random value
-        if weights == 1: 
-            val = float(random.uniform(-0.5, 0.5))
-            # Round to tenth of decimal
-            self.inweight = round(val, 2)
-        # Set initial weight to 0
-        else: self.inweight = weights
-        # Create matrix to store w[i][j] values of weights
-        self.weights = [[self.inweight for x in range(self.num_outputs)] for y in range(self.num_inputs)]
+		# Set initial weight to random value
+		if weights == 1: 
+			val = float(random.uniform(-0.5, 0.5))
+			valb = float(random.uniform(-0.5, 0.5))
+			# Round to tenth of decimal
+			self.inweight = round(val, 2)
+			self.inbweight = round(valb, 2) #Store diff random weight for bias
+		# Set initial weight to 0
+		else: self.inweight = self.inbweight = weights # Store weight values as 0
+		# Create matrix to store w[i][j] values of weights
+		self.weights = [[self.inweight for x in range(self.inputs)] for y in range(self.inputs)]
+		self.bias = [self.inbweight for x in range(3)] # 3 bias' with user set weight
+		'''
+		print('The training sets are: ', self.tset)
+		print('The weight is: ', self.weights)
+		print('The bias is: ', self.bias)
+		'''
 
+"""
+Run the training algorithm for Madaline
 
+args:
+	tsets: training sets and their associated outputs (2D array)
+	bias: Array of the initilized bias'
+	rate: user determined learning rate of Madaline
+	epochs: max # of times to run program
+"""
+def trainAlgo(tsets, bias, rate, epochs):
+	# Get random value for v1, v2 bias
+	val = float(random.uniform(-0.5, 0.5))
+	v1 = v2 = round(val, 2)
+
+	stop = False
+	while not stop:
+		# Store each training pair, s:t 
+		for tset in tsets:
+			print(tset)
+		stop = True
 
 """
 Activation Function for Madaline
@@ -118,6 +147,8 @@ def main():
 				val = mm.pick_one(choice) 
 				# Store values from initilizeIt()
 				weights, epochs, rate, outfile = val
+				t = Training(ins, outs, pairs, weights, tsets)
+				trainAlgo(t.tset, t.bias, rate, epochs)
 				break
 			mm.pick_one(choice)
 			break
