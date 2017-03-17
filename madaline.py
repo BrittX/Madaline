@@ -48,9 +48,8 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 	v1 = v2 = round(val, 2)
 	x = [] # to store x inputs
 	t = [] # to store t outputs
-	k = 1
-
 	stop = False
+
 	while not stop:
 		# Store each training pair, s:t 
 		for i,tset in enumerate(tsets):
@@ -58,9 +57,6 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 				x.append(tset)
 			if i % 3 == 2: # to get the outputs
 				t.append(tset)
-		# print('These are my inputs: ', x)
-		
-		
 		# Get the input to the hidden layer
 		for i in range(pairs):
 					z_in1 = bias[0] + (x[i][0] * weights[i][0]) + (x[i][1] * weights[i][0]) # Need to move to for loop(?)
