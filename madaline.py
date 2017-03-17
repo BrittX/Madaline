@@ -46,12 +46,17 @@ def trainAlgo(tsets, bias, rate, epochs):
 	# Get random value for v1, v2 bias
 	val = float(random.uniform(-0.5, 0.5))
 	v1 = v2 = round(val, 2)
+	x = [] # to store x inputs
+	t = [] # to store t outputs
 
 	stop = False
 	while not stop:
 		# Store each training pair, s:t 
-		for tset in tsets:
-			print(tset)
+		for i,tset in enumerate(tsets):
+			if i % 3 == 1: # to get the inputs
+				x.append(tset)
+			if i % 3 == 2: # to get the outputs
+				t.append(tset)
 		stop = True
 
 """
