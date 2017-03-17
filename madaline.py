@@ -25,7 +25,7 @@ class Training(object):
 		# Set initial weight to 0
 		else: self.inweight = self.inbweight = weights # Store weight values as 0
 		# Create matrix to store w[i][j] values of weights
-		self.weights = [[self.inweight for x in range(self.inputs)] for y in range(self.inputs)]
+		self.weights = [[self.inweight for x in range(self.inputs)] for y in range(self.pairs)]
 		self.bias = [self.inbweight for x in range(3)] # 3 bias' with user set weight
 
 		print('The weight is: ', self.weights)
@@ -63,15 +63,12 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 				t.append(tset)
 		# print('These are my inputs: ', x)
 		
-		'''
+		
 		# Get the input to the hidden layer
 		for i in range(pairs):
-			for j in range(inputs):
-				for k in range(1, inputs):
-					z_in1 = bias[0] + (x[i][0] * weights[j][0]) + (x[i][1] * weights[k][0]) # Need to move to for loop(?)
-					z_in2 = bias[1] + (x[i][0] * weights[j][1]) + (x[i][1] * weights[k][1])
-					print('This is z_in1: ', z_in1)
-		'''
+					z_in1 = bias[0] + (x[i][0] * weights[i][0]) + (x[i][1] * weights[i][0]) # Need to move to for loop(?)
+					z_in2 = bias[1] + (x[i][0] * weights[i][1]) + (x[i][1] * weights[i][1])
+		
 		'''
 		# Find output of hidden layers
 		z1 = activateF(z_in1)
