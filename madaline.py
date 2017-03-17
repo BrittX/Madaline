@@ -12,8 +12,8 @@ class Training(object):
 		self.inputs = inputs
 		self.outputs = outputs
 		self.pairs = pairs
+		tsets = [list(map(float, lst)) for lst in tsets] # Cast all the values in tsets to an int
 		self.tset = tsets # Store training set and their outputs aka my s and t
-
 		# Set inputs and their weights
 		# Set initial weight to random value
 		if weights == 1: 
@@ -27,9 +27,12 @@ class Training(object):
 		# Create matrix to store w[i][j] values of weights
 		self.weights = [[self.inweight for x in range(self.inputs)] for y in range(self.inputs)]
 		self.bias = [self.inbweight for x in range(3)] # 3 bias' with user set weight
+
+		print('The weight is: ', self.weights)
+
 		'''
 		print('The training sets are: ', self.tset)
-		print('The weight is: ', self.weights)
+		
 		print('The bias is: ', self.bias)
 		'''
 
@@ -42,12 +45,13 @@ args:
 	rate: user determined learning rate of Madaline
 	epochs: max # of times to run program
 """
-def trainAlgo(tsets, bias, rate, epochs):
+def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 	# Get random value for v1, v2 bias
 	val = float(random.uniform(-0.5, 0.5))
 	v1 = v2 = round(val, 2)
 	x = [] # to store x inputs
 	t = [] # to store t outputs
+	k = 1
 
 	stop = False
 	while not stop:
@@ -57,6 +61,25 @@ def trainAlgo(tsets, bias, rate, epochs):
 				x.append(tset)
 			if i % 3 == 2: # to get the outputs
 				t.append(tset)
+		# print('These are my inputs: ', x)
+		
+		'''
+		# Get the input to the hidden layer
+		for i in range(pairs):
+			for j in range(inputs):
+				for k in range(1, inputs):
+					z_in1 = bias[0] + (x[i][0] * weights[j][0]) + (x[i][1] * weights[k][0]) # Need to move to for loop(?)
+					z_in2 = bias[1] + (x[i][0] * weights[j][1]) + (x[i][1] * weights[k][1])
+					print('This is z_in1: ', z_in1)
+		'''
+		'''
+		# Find output of hidden layers
+		z1 = activateF(z_in1)
+		z2 = actiavteF(z_in2)
+
+		print('This is output of hidden layer 1: ', z1)
+		print('This is output of hidden layer 2: ', z2)
+		'''
 		stop = True
 
 """
@@ -153,7 +176,7 @@ def main():
 				# Store values from initilizeIt()
 				weights, epochs, rate, outfile = val
 				t = Training(ins, outs, pairs, weights, tsets)
-				trainAlgo(t.tset, t.bias, rate, epochs)
+				trainAlgo(t.tset, t.bias, rate, epochs, t.weights, t.pairs, t.inputs)
 				break
 			mm.pick_one(choice)
 			break
