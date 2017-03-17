@@ -14,7 +14,7 @@ class Training(object):
 		self.pairs = pairs
 		tsets = [list(map(float, lst)) for lst in tsets] # Cast all the values in tsets to an int
 		self.tset = tsets # Store training set and their outputs aka my s and t
-		# Set inputs and their weights
+
 		# Set initial weight to random value
 		if weights == 1: 
 			val = float(random.uniform(-0.5, 0.5))
@@ -30,12 +30,6 @@ class Training(object):
 
 		print('The weight is: ', self.weights)
 
-		'''
-		print('The training sets are: ', self.tset)
-		
-		print('The bias is: ', self.bias)
-		'''
-
 """
 Run the training algorithm for Madaline
 
@@ -44,6 +38,9 @@ args:
 	bias: Array of the initilized bias'
 	rate: user determined learning rate of Madaline
 	epochs: max # of times to run program
+	weights: 2D array of initial weights for each training set
+	pairs: Number of training pairs in the set
+	inputs: Number of inputs in each training set
 """
 def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 	# Get random value for v1, v2 bias
@@ -68,15 +65,18 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 		for i in range(pairs):
 					z_in1 = bias[0] + (x[i][0] * weights[i][0]) + (x[i][1] * weights[i][0]) # Need to move to for loop(?)
 					z_in2 = bias[1] + (x[i][0] * weights[i][1]) + (x[i][1] * weights[i][1])
-		
-		'''
-		# Find output of hidden layers
-		z1 = activateF(z_in1)
-		z2 = actiavteF(z_in2)
 
-		print('This is output of hidden layer 1: ', z1)
-		print('This is output of hidden layer 2: ', z2)
-		'''
+					# Find output of hidden layers
+					z1 = activateF(z_in1)
+					z2 = activateF(z_in2)
+
+					# Get output of this hidden layer
+					y_in = bias[2] + (z1 * v1) + (z2 * v2)
+					print(y_in)
+
+					# Get y = f(y_in)
+					y = activateF(y_in)
+					print('This is my y: ', y)
 		stop = True
 
 """
