@@ -2,7 +2,7 @@
 File for the madaline neural network
 """
 import madmenu as mm
-import random
+import random as r
 
 """
 class for Training Net
@@ -17,18 +17,14 @@ class Training(object):
 
 		# Set initial weight to random value
 		if weights == 1: 
-			val = float(random.uniform(-0.5, 0.5))
-			valb = float(random.uniform(-0.5, 0.5))
-			# Round to tenth of decimal
-			self.inweight = round(val, 2)
-			self.inbweight = round(valb, 2) #Store diff random weight for bias
+			self.bias = [round(r.uniform(-0.5, 0.5), 2) for x in range(3)] # 3 bias' with user set weight
+			# Create matrix to store w[i][j] values of weights
+			self.weights = [[round(r.uniform(-0.5, 0.5), 2) for x in range(self.inputs)] for y in range(self.inputs)]
 		# Set initial weight to 0
 		else: self.inweight = self.inbweight = weights # Store weight values as 0
-		# Create matrix to store w[i][j] values of weights
-		self.weights = [[self.inweight for x in range(self.inputs)] for y in range(self.pairs)]
-		self.bias = [self.inbweight for x in range(3)] # 3 bias' with user set weight
-
+	
 		print('The weight is: ', self.weights)
+		print('The bias is: ', self.bias)
 
 """
 Run the training algorithm for Madaline
@@ -44,11 +40,11 @@ args:
 """
 def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 	# Get random value for v1, v2 bias
-	val = float(random.uniform(-0.5, 0.5))
-	v1 = v2 = round(val, 2)
+	v1 = v2 = round(r.uniform(-0.5, 0.5), 2)
 	x = [] # to store x inputs
 	t = [] # to store t outputs
 	stop = False
+	a, b, c = 0, 1, 2 #for the bias
 
 	while not stop:
 		# Store each training pair, s:t 
@@ -59,20 +55,31 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 				t.append(tset)
 		# Get the input to the hidden layer
 		for i in range(pairs):
-					z_in1 = bias[0] + (x[i][0] * weights[i][0]) + (x[i][1] * weights[i][0]) # Need to move to for loop(?)
-					z_in2 = bias[1] + (x[i][0] * weights[i][1]) + (x[i][1] * weights[i][1])
+					z_in1 = bias[a] + (x[i][0] * weights[0][0]) + (x[i][1] * weights[1][0]) # Need to move to for loop(?)
+					z_in2 = bias[b] + (x[i][0] * weights[0][1]) + (x[i][1] * weights[1][1])
 
 					# Find output of hidden layers
 					z1 = activateF(z_in1)
 					z2 = activateF(z_in2)
 
 					# Get output of this hidden layer
-					y_in = bias[2] + (z1 * v1) + (z2 * v2)
+					y_in = bias[c] + (z1 * v1) + (z2 * v2)
 					print(y_in)
 
 					# Get y = f(y_in)
 					y = activateF(y_in)
 					print('This is my y: ', y)
+
+					# Check if error occured
+					if t[i] == y: 
+						break # no updates occur
+					'''
+					if t[i] == 1:
+						val = min((z1, z2), key=lambda x: abs(x -0)) # Get z value closest to 0
+						if val == z1:
+							b[ze] = b[ze] + (rate * (1 - z_in1))
+							weights[0][0] = weights[0][0] + (rate * (1 - z_in1) * x[i][0]
+					'''
 		stop = True
 
 """
