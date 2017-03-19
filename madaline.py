@@ -3,6 +3,7 @@ File for the madaline neural network
 """
 import madmenu as mm
 import random as r
+import os
 
 """
 class for Training Net
@@ -42,8 +43,8 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 	v1 = v2 = round(r.uniform(-0.5, 0.5), 2)
 	x = [] # to store x inputs
 	t = [] # to store t outputs
-	stop = change = False
-	a, b, c = 0, 1, 2 #for the bias
+	stop = False # for determining convergence
+	a, b, c = 0, 1, 2 # for the bias/weights
 	count = 0 # keep track of number of inputs we've done so far
 	era = 0 # Keep track of number of epochs
 	converged = 0
@@ -79,7 +80,6 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 			# Check if error occured
 			if t[i][a] == y: # Gets corresponding output
 				print('t == y') 
-				# stop = True
 				change = False
 				converged +=1 # increment converged
 				print('Converged equals ', converged)
@@ -91,7 +91,6 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 				continue
 			# t = 1/ Seems to be working
 			elif t[i][a] == 1.0: # check if t = 1
-				change = True # keep track of whether weights are being changed
 				val = min((z_in1, z_in2), key=lambda x: abs(x - 0)) # Get z value closest to 0
 				print('This is the minimum value: ', val)
 				if val == z_in1:
@@ -113,7 +112,6 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 					converged = 0
 			# t = -1
 			elif t[i][a] == -1.0:
-				change = True # keep track of changed weights
 				# Both z_in1 and z_in2 have positive inputs
 				if z_in1 >= 0 and z_in2 >= 0:
 					print('both positive')
@@ -153,22 +151,6 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 			print('Training converged after {x} epochs'.format(x=epochs))
 			break
 		print('This is the era: ', era)
-		'''	
-			# Check if weights were changed:
-			if not change: 
-				print('Training converged after {x} epochs'.format(x=epochs))
-				stop = True
-				break
-			
-			# Check if we've done an equal or greater amount of specified epochs
-			if era >= epochs:
-				print('Training converged after {x} epochs'.format(x=epochs))
-				stop = True
-				break
-
-		'''
-
-		# stop = True
 
 """
 Activation Function for Madaline
@@ -222,7 +204,6 @@ Function to gather the weights, epochs, rates and output file name
 	for Madaline NN 
 """
 def initializeIt():
-	# global weights, epochs, rate, outfile
 	try:
 		weights = int(input("\nEnter '0' to initialize weights to zero, or enter '1'" 
 			+ "to initialize weights to random values between -0.5 and 0.5:\n>> "))
@@ -238,6 +219,12 @@ def initializeIt():
 			initializeIt()
 		# Get output file name
 		outfile = input("Enter the file name where the weights will be saved: \n>>")
+		if os.path.exists(outfile) and not os.stat(outfile).st_size == 0:
+			print('Try again, that file is not empty') 
+			initializeIt() 
+		if not infile.endswith('.txt'):
+			print('You need to enter a text file')
+			initializeIt()
 	except KeyboardInterrupt:
 		sys.exit()
 	except ValueError:
@@ -271,6 +258,9 @@ def main():
 		except ValueError:
 			print('Need to enter a number that matches one of the options')
 			mm.menu()
+		except KeyboardInterrupt:
+			os.system('clear')
+			mm.pick_one(3)
 
 # Testing file
 if __name__ == '__main__':

@@ -35,6 +35,9 @@ def pick_one(choice):
         print("Error: Invalid selection")
         time.sleep(1)
         menu()
+    except KeyboardInterrupt: 
+        os.system('clear')
+        menu_choice[3]()
     # print(vals)
     return vals
 
@@ -43,16 +46,20 @@ Print initial greeting and get input file
 """
 def greetIn():
     print('Welcome to my Madaline Neural Net!\n')
-    # store as a input file
-    infile = input('Enter the data input file name: ')
-    if os.path.isfile(infile) and infile.endswith('.txt'): # return True if it is a file
-        return infile
-    else: # file not real or not a .dat file
-        print('The file you entered does not exist.')
-        print('Please enter a txt file')
-        time.sleep(1)
-        os.system('clear')
-        greetIn()
+    try: 
+        # store as a input file
+        infile = input('Enter the data input file name: ')
+        if os.path.isfile(infile) and infile.endswith('.txt'): # return True if it is a file
+            return infile
+    except FileNotFoundError: # file not real or not a .txt file
+            print('The file you entered does not exist.')
+            print('Please enter a txt file')
+            time.sleep(1)
+            os.system('clear')
+            greetIn()
+    except KeyboardInterrupt:
+            os.system('clear')
+            menu_choice[3]()
 
 # Options for menu
 menu_choice = {"menu": menu,
