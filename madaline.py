@@ -43,6 +43,7 @@ args:
 def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, outputs):
 	# Get random value for v1, v2 bias
 	v1 = v2 = round(r.uniform(-0.5, 0.5), 2)
+	print('Epochs equals: ', epochs)
 	x = [] # to store x inputs
 	t = [] # to store t outputs
 	stop = False # for determining convergence
@@ -92,7 +93,7 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, output
 					stop = True
 					# Write to output file
 					with open(outfile, "w") as store:
-						store.write("%d\n%d\n%d\n\n%s\n%s\n%d\n%d" %(inputs, outputs, pairs, weights, bias, v1, v2))
+						store.write("%d\n%d\n%d\n\n%s\n%s\n%.2f\n%.2f" %(inputs, outputs, pairs, weights, bias, v1, v2))
 					store.close()
 					break
 				continue
@@ -152,13 +153,14 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, output
 		if count == pairs:
 			era += 1 # increment epoch we're on
 			count = 0 # reset count
+			print('Era: ', era)
 		# Check if the era is greater than epochs so we can stop
 		if era >= epochs:
 			stop = True
 			print('Training converged after {x} epochs'.format(x=epochs))
 			# Write to output file
 			with open(outfile, "w") as store:
-				store.write("%d\n%d\n%d\n\n%s\n%s\n%d\n%d" %(inputs, outputs, pairs, weights, bias, v1, v2))
+				store.write("%d\n%d\n%d\n\n%s\n%s\n%.2f\n%.2f" %(inputs, outputs, pairs, weights, bias, v1, v2))
 			store.close()
 			break
 
