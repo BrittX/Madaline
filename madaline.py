@@ -42,11 +42,10 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 	v1 = v2 = round(r.uniform(-0.5, 0.5), 2)
 	x = [] # to store x inputs
 	t = [] # to store t outputs
-	stop = False
+	stop = change = False
 	a, b, c = 0, 1, 2 #for the bias
 	count = 0 # keep track of number of inputs we've done so far
 	era = 0
-	change = False
 
 	# Store each training pair, s:t 
 	for i,tset in enumerate(tsets):
@@ -57,39 +56,29 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 	while not stop:
 		# Get the input to the hidden layer
 		for i in range(pairs):
-			print('These are the weights: ', weights)
+			print('\nThese are the weights: ', weights)
 			print('These are the bias: ', bias)
 			count += 1
 			z_in1 = round(bias[a] + (x[i][a] * weights[a][a]) + (x[i][b] * weights[b][a]), 2) # Need to move to for loop(?)
 			z_in2 = round(bias[b] + (x[i][a] * weights[a][b]) + (x[i][b] * weights[b][b]), 2)
-
-			# Are correct
-			print('This is zin1', z_in1) 
-			print('This is zin2', z_in2)
-			
+			print('This is z_in1: ', z_in1)
+			print('This is z_in2: ', z_in2)
 			# Find output of hidden layers
-			# Correct as well
 			z1 = activateF(z_in1)
 			z2 = activateF(z_in2)
-			print('This is my z1 value: ',z1)
-			print('This is my z2 value: ', z2)
 			
 			# Get output of this hidden layer
-			# Correct
 			y_in = round(bias[c] + (z1 * v1) + (z2 * v2), 2)
-			print('This is my y_in', y_in)
 			
 			# Get y = f(y_in)
-			# So far correct
 			y = float(activateF(y_in))
-			print('\nThis is y', y)
+			print('This is y', y)
 			print('The t to check is: ', t[i][a])
 			
 			# Check if error occured
 			if t[i][a] == y: # Gets corresponding output
 				print('t == y') 
-				# print('Training converged after {x} epochs'.format(x=count))
-				stop = True
+				# stop = True
 				change = False
 				continue
 			# t = 1/ Seems to be working
@@ -97,14 +86,14 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 				change = True # keep track of whether weights are being changed
 				val = min((z_in1, z_in2), key=lambda x: abs(x - 0)) # Get z value closest to 0
 				print('This is the minimum value: ', val)
-				if val == abs(z_in1):
+				if val == z_in1:
 					# Update bias and weight values
 					bias[a] = round(bias[a] + rate * (1 - z_in1), 2)
 					weights[a][a] = round(weights[a][a] + (rate * (1 - z_in1) * x[i][a]), 2)
 					weights[b][a] = round(weights[b][a] + (rate * (1 - z_in1) * x[i][b]), 2)
 					print('T = 1, Updated bias[0]: ', bias[a])
 					print('T = 1, Updated weights: ', weights)
-				if val == abs(z_in2):
+				if val == z_in2:
 					# Update the weight and bias corresponding to z2
 					bias[b] = round(bias[b] + (rate * (1 - z_in2)), 2)
 					weights[b][b] = round(weights[b][b] + (rate * (1 - z_in2) * x[i][b]), 2)
@@ -119,7 +108,7 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 					print('both positive')
 					# update bias'
 					bias[a] = round(bias[a] + rate * (-1 - z_in1), 2)
-					bias[b] = round(bias[b] + rate * (-1 - zin_2), 2)
+					bias[b] = round(bias[b] + rate * (-1 - z_in2), 2)
 					# update weights
 					weights[a][a] = round(weights[a][a] + (rate * (-1 - z_in1) * x[i][a]), 2)
 					weights[a][b] = round(weights[a][b] + (rate * (-1 - z_in2) * x[i][a]), 2)
@@ -132,19 +121,24 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 					# update corresponding weights
 					weights[a][a] = round(weights[a][a] + (rate * (-1 - z_in1) * x[i][a]), 2)
 					weights[b][a] = round(weights[b][a] + (rate * (-1 - z_in1) * x[i][b]), 2)
-				else: # just z_in2 is greater than 0
+				elif z_in2 >= 0: # just z_in2 is greater than 0
 					print('z_in2 positive', z_in2)
 					#update bias
-					bias[b] = round(bias[b] + rate * (-1 - zin2), 2)
+					bias[b] = round(bias[b] + rate * (-1 - z_in2), 2)
 					# update weights
 					weights[a][b] = round(weights[a][b] + (rate * (-1 - z_in2) * x[i][a]), 2)
 					weights[b][b] = round(weights[b][b] + (rate * (-1 - z_in2) * x[i][b]), 2)
 
-			# Check if we've gone through the number of training pairs
-			if count == pairs:
-				era += 1 # increment epoch we're on
-				count = 0 # reset count
-			'''	
+		# Check if we've gone through the number of training pairs
+		if count == pairs:
+			era += 1 # increment epoch we're on
+			count = 0 # reset count
+
+		if era >= epochs:
+			stop = True
+			break
+		print('This is the era: ', era)
+		'''	
 			# Check if weights were changed:
 			if not change: 
 				print('Training converged after {x} epochs'.format(x=epochs))
@@ -157,9 +151,9 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 				stop = True
 				break
 
-			'''
+		'''
 
-		stop = True
+		# stop = True
 
 """
 Activation Function for Madaline
