@@ -95,6 +95,7 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, output
 					with open(outfile, "w") as store:
 						store.write("%d\n%d\n%d\n\n%s\n%s\n%.2f\n%.2f" %(inputs, outputs, pairs, weights, bias, v1, v2))
 					store.close()
+					return outfile
 					break
 				continue
 			# t = 1/ Seems to be working
@@ -162,6 +163,7 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, output
 			with open(outfile, "w") as store:
 				store.write("%d\n%d\n%d\n\n%s\n%s\n%.2f\n%.2f" %(inputs, outputs, pairs, weights, bias, v1, v2))
 			store.close()
+			return outfile
 			break
 
 """
@@ -264,7 +266,11 @@ def main():
 				# Store values from initilizeIt()
 				weights, epochs, rate, outfile = val
 				t = Training(ins, outs, pairs, weights, tsets)
-				trainAlgo(t.tset, t.bias, rate, epochs, t.weights, t.pairs, t.inputs, outfile, t.outputs)
+				# Store output file from training
+				of = trainAlgo(t.tset, t.bias, rate, epochs, t.weights, t.pairs, t.inputs, outfile, t.outputs)
+				"""
+				Will need to call new prompt
+				"""
 				break
 			mm.pick_one(choice)
 			break
