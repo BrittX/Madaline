@@ -4,6 +4,7 @@ File for the madaline neural network
 import madmenu as mm
 import random as r
 import os
+import time
 
 """
 class for Training Net
@@ -37,8 +38,9 @@ args:
 	weights: 2D array of initial weights for each training set
 	pairs: Number of training pairs in the set
 	inputs: Number of inputs in each training set
+	outfile: output file to save the weights to
 """
-def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
+def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, outputs):
 	# Get random value for v1, v2 bias
 	v1 = v2 = round(r.uniform(-0.5, 0.5), 2)
 	x = [] # to store x inputs
@@ -48,6 +50,7 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 	count = 0 # keep track of number of inputs we've done so far
 	era = 0 # Keep track of number of epochs
 	converged = 0
+	outs = []
 
 	# Store each training pair, s:t 
 	for i,tset in enumerate(tsets):
@@ -87,6 +90,10 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 				if converged >= pairs: # Means we haven't updated weights for each pair
 					print('Training converged after {x} epochs'.format(x=era))
 					stop = True
+					# Write to output file
+					with open(outfile, "w") as store:
+						store.write("%d\n%d\n%d\n\n%s\n%s\n%d\n%d" %(inputs, outputs, pairs, weights, bias, v1, v2))
+					store.close()
 					break
 				continue
 			# t = 1/ Seems to be working
@@ -149,8 +156,11 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 		if era >= epochs:
 			stop = True
 			print('Training converged after {x} epochs'.format(x=epochs))
+			# Write to output file
+			with open(outfile, "w") as store:
+				store.write("%d\n%d\n%d\n\n%s\n%s\n%d\n%d" %(inputs, outputs, pairs, weights, bias, v1, v2))
+			store.close()
 			break
-		print('This is the era: ', era)
 
 """
 Activation Function for Madaline
@@ -252,7 +262,7 @@ def main():
 				# Store values from initilizeIt()
 				weights, epochs, rate, outfile = val
 				t = Training(ins, outs, pairs, weights, tsets)
-				trainAlgo(t.tset, t.bias, rate, epochs, t.weights, t.pairs, t.inputs)
+				trainAlgo(t.tset, t.bias, rate, epochs, t.weights, t.pairs, t.inputs, outfile, t.outputs)
 				break
 			mm.pick_one(choice)
 			break
