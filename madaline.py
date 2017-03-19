@@ -21,10 +21,9 @@ class Training(object):
 			# Create matrix to store w[i][j] values of weights
 			self.weights = [[round(r.uniform(-0.5, 0.5), 2) for x in range(self.inputs)] for y in range(self.inputs)]
 		# Set initial weight to 0
-		else: self.inweight = self.inbweight = weights # Store weight values as 0
-	
-		print('The weight is: ', self.weights)
-		print('The bias is: ', self.bias)
+		else: 
+			self.weights = [[weights for x in range(self.inputs)] for y in range(self.inputs)]# Store weight values as 0
+			self.bias = [round(r.uniform(-0.5, 0.5), 2) for x in range(3)]
 
 """
 Run the training algorithm for Madaline
@@ -45,41 +44,121 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 	t = [] # to store t outputs
 	stop = False
 	a, b, c = 0, 1, 2 #for the bias
+	count = 0 # keep track of number of inputs we've done so far
+	era = 0
+	change = False
 
+	# Store each training pair, s:t 
+	for i,tset in enumerate(tsets):
+		if i % 3 == 1: # to get the inputs
+			x.append(tset)
+		if i % 3 == 2: # to get the outputs
+			t.append(tset)
 	while not stop:
-		# Store each training pair, s:t 
-		for i,tset in enumerate(tsets):
-			if i % 3 == 1: # to get the inputs
-				x.append(tset)
-			if i % 3 == 2: # to get the outputs
-				t.append(tset)
 		# Get the input to the hidden layer
 		for i in range(pairs):
-					z_in1 = bias[a] + (x[i][0] * weights[0][0]) + (x[i][1] * weights[1][0]) # Need to move to for loop(?)
-					z_in2 = bias[b] + (x[i][0] * weights[0][1]) + (x[i][1] * weights[1][1])
+			print('These are the weights: ', weights)
+			print('These are the bias: ', bias)
+			count += 1
+			z_in1 = round(bias[a] + (x[i][a] * weights[a][a]) + (x[i][b] * weights[b][a]), 2) # Need to move to for loop(?)
+			z_in2 = round(bias[b] + (x[i][a] * weights[a][b]) + (x[i][b] * weights[b][b]), 2)
 
-					# Find output of hidden layers
-					z1 = activateF(z_in1)
-					z2 = activateF(z_in2)
+			# Are correct
+			print('This is zin1', z_in1) 
+			print('This is zin2', z_in2)
+			
+			# Find output of hidden layers
+			# Correct as well
+			z1 = activateF(z_in1)
+			z2 = activateF(z_in2)
+			print('This is my z1 value: ',z1)
+			print('This is my z2 value: ', z2)
+			
+			# Get output of this hidden layer
+			# Correct
+			y_in = round(bias[c] + (z1 * v1) + (z2 * v2), 2)
+			print('This is my y_in', y_in)
+			
+			# Get y = f(y_in)
+			# So far correct
+			y = float(activateF(y_in))
+			print('\nThis is y', y)
+			print('The t to check is: ', t[i][a])
+			
+			# Check if error occured
+			if t[i][a] == y: # Gets corresponding output
+				print('t == y') 
+				# print('Training converged after {x} epochs'.format(x=count))
+				stop = True
+				change = False
+				continue
+			# t = 1/ Seems to be working
+			elif t[i][a] == 1.0: # check if t = 1
+				change = True # keep track of whether weights are being changed
+				val = min((z_in1, z_in2), key=lambda x: abs(x - 0)) # Get z value closest to 0
+				print('This is the minimum value: ', val)
+				if val == abs(z_in1):
+					# Update bias and weight values
+					bias[a] = round(bias[a] + rate * (1 - z_in1), 2)
+					weights[a][a] = round(weights[a][a] + (rate * (1 - z_in1) * x[i][a]), 2)
+					weights[b][a] = round(weights[b][a] + (rate * (1 - z_in1) * x[i][b]), 2)
+					print('T = 1, Updated bias[0]: ', bias[a])
+					print('T = 1, Updated weights: ', weights)
+				if val == abs(z_in2):
+					# Update the weight and bias corresponding to z2
+					bias[b] = round(bias[b] + (rate * (1 - z_in2)), 2)
+					weights[b][b] = round(weights[b][b] + (rate * (1 - z_in2) * x[i][b]), 2)
+					weights[a][b] = round(weights[a][b] + (rate * (1 - z_in2) * x[i][a]), 2)
+					print('T = 1, Updated bias[1]: ', bias[b])
+					print('T = 1, Updated weights: ', weights)
+			# t = -1
+			elif t[i][a] == -1.0:
+				change = True # keep track of changed weights
+				# Both z_in1 and z_in2 have positive inputs
+				if z_in1 >= 0 and z_in2 >= 0:
+					print('both positive')
+					# update bias'
+					bias[a] = round(bias[a] + rate * (-1 - z_in1), 2)
+					bias[b] = round(bias[b] + rate * (-1 - zin_2), 2)
+					# update weights
+					weights[a][a] = round(weights[a][a] + (rate * (-1 - z_in1) * x[i][a]), 2)
+					weights[a][b] = round(weights[a][b] + (rate * (-1 - z_in2) * x[i][a]), 2)
+					weights[b][b] = round(weights[b][b] + (rate * (-1 - z_in2) * x[i][b]), 2)
+					weights[b][a] = round(weights[b][a] + (rate * (-1 - z_in1) * x[i][b]), 2)
+				elif z_in1 >= 0:
+					print('z_in1 positive', z_in1)
+					# update bias
+					bias[a] = round(bias[a] + rate * (-1 - z_in1), 2)
+					# update corresponding weights
+					weights[a][a] = round(weights[a][a] + (rate * (-1 - z_in1) * x[i][a]), 2)
+					weights[b][a] = round(weights[b][a] + (rate * (-1 - z_in1) * x[i][b]), 2)
+				else: # just z_in2 is greater than 0
+					print('z_in2 positive', z_in2)
+					#update bias
+					bias[b] = round(bias[b] + rate * (-1 - zin2), 2)
+					# update weights
+					weights[a][b] = round(weights[a][b] + (rate * (-1 - z_in2) * x[i][a]), 2)
+					weights[b][b] = round(weights[b][b] + (rate * (-1 - z_in2) * x[i][b]), 2)
 
-					# Get output of this hidden layer
-					y_in = bias[c] + (z1 * v1) + (z2 * v2)
-					print(y_in)
+			# Check if we've gone through the number of training pairs
+			if count == pairs:
+				era += 1 # increment epoch we're on
+				count = 0 # reset count
+			'''	
+			# Check if weights were changed:
+			if not change: 
+				print('Training converged after {x} epochs'.format(x=epochs))
+				stop = True
+				break
+			
+			# Check if we've done an equal or greater amount of specified epochs
+			if era >= epochs:
+				print('Training converged after {x} epochs'.format(x=epochs))
+				stop = True
+				break
 
-					# Get y = f(y_in)
-					y = activateF(y_in)
-					print('This is my y: ', y)
+			'''
 
-					# Check if error occured
-					if t[i] == y: 
-						break # no updates occur
-					'''
-					if t[i] == 1:
-						val = min((z1, z2), key=lambda x: abs(x -0)) # Get z value closest to 0
-						if val == z1:
-							b[ze] = b[ze] + (rate * (1 - z_in1))
-							weights[0][0] = weights[0][0] + (rate * (1 - z_in1) * x[i][0]
-					'''
 		stop = True
 
 """
