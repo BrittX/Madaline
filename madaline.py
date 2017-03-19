@@ -45,7 +45,8 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 	stop = change = False
 	a, b, c = 0, 1, 2 #for the bias
 	count = 0 # keep track of number of inputs we've done so far
-	era = 0
+	era = 0 # Keep track of number of epochs
+	converged = 0
 
 	# Store each training pair, s:t 
 	for i,tset in enumerate(tsets):
@@ -80,6 +81,13 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 				print('t == y') 
 				# stop = True
 				change = False
+				converged +=1 # increment converged
+				print('Converged equals ', converged)
+				# Check if we've converged
+				if converged >= pairs: # Means we haven't updated weights for each pair
+					print('Training converged after {x} epochs'.format(x=era))
+					stop = True
+					break
 				continue
 			# t = 1/ Seems to be working
 			elif t[i][a] == 1.0: # check if t = 1
@@ -100,6 +108,9 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 					weights[a][b] = round(weights[a][b] + (rate * (1 - z_in2) * x[i][a]), 2)
 					print('T = 1, Updated bias[1]: ', bias[b])
 					print('T = 1, Updated weights: ', weights)
+				# Reset converged
+				if converged > 0: 
+					converged = 0
 			# t = -1
 			elif t[i][a] == -1.0:
 				change = True # keep track of changed weights
@@ -128,14 +139,18 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs):
 					# update weights
 					weights[a][b] = round(weights[a][b] + (rate * (-1 - z_in2) * x[i][a]), 2)
 					weights[b][b] = round(weights[b][b] + (rate * (-1 - z_in2) * x[i][b]), 2)
+				# Reset converged
+				if converged > 0: 
+					converged = 0
 
 		# Check if we've gone through the number of training pairs
 		if count == pairs:
 			era += 1 # increment epoch we're on
 			count = 0 # reset count
-
+		# Check if the era is greater than epochs so we can stop
 		if era >= epochs:
 			stop = True
+			print('Training converged after {x} epochs'.format(x=epochs))
 			break
 		print('This is the era: ', era)
 		'''	
