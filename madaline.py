@@ -196,7 +196,8 @@ def readToStore(aFile):
 		return t_ins, t_outs, t_pairs, tests 
 	except TypeError:
 		print("Invalid File")
-		mm.greetIn()
+		os.system('clear')
+		main()
 
 
 """
@@ -222,7 +223,7 @@ def initializeIt():
 		if os.path.exists(outfile) and not os.stat(outfile).st_size == 0:
 			print('Try again, that file is not empty') 
 			initializeIt() 
-		if not infile.endswith('.txt'):
+		if not outfile.endswith('.txt'):
 			print('You need to enter a text file')
 			initializeIt()
 	except KeyboardInterrupt:

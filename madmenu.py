@@ -12,7 +12,7 @@ Function to create the interactive menu for the user
 def menu():
     #os.system('clear')
 
-    print("Please choose from the options below:")
+    print("\nPlease choose from the options below:")
 
     print("1. Train using a training data file")
     print("2. Test/Deploy Neural Net")
@@ -51,15 +51,17 @@ def greetIn():
         infile = input('Enter the data input file name: ')
         if os.path.isfile(infile) and infile.endswith('.txt'): # return True if it is a file
             return infile
-    except FileNotFoundError: # file not real or not a .txt file
+    except KeyboardInterrupt:
+            os.system('clear')
+            menu_choice[3]()
+    '''
+    except Error: # file not real or not a .txt file
             print('The file you entered does not exist.')
             print('Please enter a txt file')
             time.sleep(1)
             os.system('clear')
             greetIn()
-    except KeyboardInterrupt:
-            os.system('clear')
-            menu_choice[3]()
+    '''
 
 # Options for menu
 menu_choice = {"menu": menu,
