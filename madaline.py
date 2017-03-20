@@ -98,29 +98,29 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, output
 					return outfile
 					break
 				continue
-			# t = 1/ Seems to be working
-			elif t[i][a] == 1.0: # check if t = 1
+			# t = 1 and z1/z2 = -1
+			elif t[i][a] == 1.0 and (z1 == -1 and z2 == -1): # check if t = 1 and z1/z2 = -1
 				val = min((z_in1, z_in2), key=lambda x: abs(x - 0)) # Get z value closest to 0
 				print('This is the minimum value: ', val)
 				if val == z_in1:
 					# Update bias and weight values
 					bias[a] = round(bias[a] + rate * (1 - z_in1), 2)
-					weights[a][a] = round(weights[a][a] + (rate * (1 - z_in1) * x[i][a]), 2)
-					weights[b][a] = round(weights[b][a] + (rate * (1 - z_in1) * x[i][b]), 2)
+					weights[a][a] = round(weights[a][a] + rate * (1 - z_in1) * x[i][a], 2)
+					weights[b][a] = round(weights[b][a] + rate * (1 - z_in1) * x[i][b], 2)
 					print('T = 1, Updated bias[0]: ', bias[a])
 					print('T = 1, Updated weights: ', weights)
 				if val == z_in2:
 					# Update the weight and bias corresponding to z2
-					bias[b] = round(bias[b] + (rate * (1 - z_in2)), 2)
-					weights[b][b] = round(weights[b][b] + (rate * (1 - z_in2) * x[i][b]), 2)
-					weights[a][b] = round(weights[a][b] + (rate * (1 - z_in2) * x[i][a]), 2)
+					bias[b] = round(bias[b] + rate * (1 - z_in2), 2)
+					weights[b][b] = round(weights[b][b] + rate * (1 - z_in2) * x[i][b], 2)
+					weights[a][b] = round(weights[a][b] + rate * (1 - z_in2) * x[i][a], 2)
 					print('T = 1, Updated bias[1]: ', bias[b])
 					print('T = 1, Updated weights: ', weights)
 				# Reset converged
 				if converged > 0: 
 					converged = 0
-			# t = -1
-			elif t[i][a] == -1.0:
+			# t = -1 and z1 0r z2 = 1
+			elif t[i][a] == -1.0 and (z1 == 1 or z2 ==1):
 				# Both z_in1 and z_in2 have positive inputs
 				if z_in1 >= 0 and z_in2 >= 0:
 					print('both positive')
@@ -128,10 +128,10 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, output
 					bias[a] = round(bias[a] + rate * (-1 - z_in1), 2)
 					bias[b] = round(bias[b] + rate * (-1 - z_in2), 2)
 					# update weights
-					weights[a][a] = round(weights[a][a] + (rate * (-1 - z_in1) * x[i][a]), 2)
-					weights[a][b] = round(weights[a][b] + (rate * (-1 - z_in2) * x[i][a]), 2)
-					weights[b][b] = round(weights[b][b] + (rate * (-1 - z_in2) * x[i][b]), 2)
-					weights[b][a] = round(weights[b][a] + (rate * (-1 - z_in1) * x[i][b]), 2)
+					weights[a][a] = round(weights[a][a] + rate * (-1 - z_in1) * x[i][a], 2)
+					weights[a][b] = round(weights[a][b] + rate * (-1 - z_in2) * x[i][a], 2)
+					weights[b][b] = round(weights[b][b] + rate * (-1 - z_in2) * x[i][b], 2)
+					weights[b][a] = round(weights[b][a] + rate * (-1 - z_in1) * x[i][b], 2)
 				elif z_in1 >= 0:
 					print('z_in1 positive', z_in1)
 					# update bias
