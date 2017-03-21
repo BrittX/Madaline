@@ -44,12 +44,6 @@ args:
 def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, outputs):
 	# Hardcode value for  for v1, v2 bias
 	v1 = v2 = bias[2] = .5
-	# Testing with specific values
-	# weights = [[.05, .1], [.2, .2]]
-	# bias = [.3, .15, .5]
-	print('This is the bias ', bias)
-	print('These are the weights: ', weights)
-	print('Epochs equals: ', epochs)
 	x = [] # to store x inputs
 	t = [] # to store t outputs
 	stop = False # for determining convergence
@@ -67,8 +61,6 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, output
 	while not stop:
 		# Get the input to the hidden layer
 		for i in range(pairs):
-			print('\nThese are the weights: ', weights)
-			print('These are the bias: ', bias)
 			count += 1
 			z_in1 = round(bias[a] + (x[i][a] * weights[a][a]) + (x[i][b] * weights[b][a]), 2) # Need to move to for loop(?)
 			z_in2 = round(bias[b] + (x[i][a] * weights[a][b]) + (x[i][b] * weights[b][b]), 2)
@@ -83,8 +75,6 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, output
 			
 			# Get y = f(y_in)
 			y = float(activateF(y_in))
-			print('This is y', y)
-			print('The t to check is: ', t[i][a])
 			
 			# Check if error occured
 			if t[i][a] == y: # Gets corresponding output
@@ -106,7 +96,6 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, output
 			# t = 1 and z1/z2 = -1
 			elif t[i][a] == 1.0 and (z1 == -1 and z2 == -1): # check if t = 1 and z1/z2 = -1
 				val = min((z_in1, z_in2), key=lambda x: abs(x - 0)) # Get z value closest to 0
-				print('This is the minimum value: ', val)
 				if val == z_in1 and val == z_in2: # Both Z_in1/z_in2 are equal
 					print('Z_in1 and Z_in2 are equal, so update just z_in1')
 					# Update bias and weight values of z_in1
@@ -162,16 +151,14 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, output
 				# Reset converged
 				if converged > 0: 
 					converged = 0
-
 		# Check if we've gone through the number of training pairs
 		if count == pairs:
 			era += 1 # increment epoch we're on
 			count = 0 # reset count
-			print('Era: ', era)
 		# Check if the era is greater than epochs so we can stop
 		if era >= epochs:
 			stop = True
-			print('Training converged after {x} epochs'.format(x=epochs))
+			print('Training converged after {x} epochs'.format(x=epochs+1))
 			# Write to output file
 			with open(outfile, "w") as store:
 				store.write("%d\n%d\n%d\n\n%s\n%s\n%.2f\n%.2f" %(inputs, outputs, pairs, weights, bias, v1, v2))
@@ -304,6 +291,17 @@ def initializeIt():
 		sys.exit()
 	return weights, epochs, rate, outfile
 
+"""
+Function to test the trained NN
+
+arg: 
+	weights - weights from the trained NN
+	tstset - set of inputs to test
+	bias - weights of the bias' from the trained NN
+	v1/v2 - the weights going into the output layer from the hidden layer
+"""
+# def testNN(weights, tstset, bias, v1, v2):
+
 def main():
 	# Greet/get initial input file
 	infile = mm.greetIn()
@@ -327,6 +325,7 @@ def main():
 			# Testing the NN
 			elif choice == 2: 
 				val = mm.pick_one(choice)
+				# outF = storeMe() # Get output file to store the results
 			# mm.pick_one(choice)
 			break
 		except ValueError:
