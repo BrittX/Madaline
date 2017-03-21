@@ -41,8 +41,9 @@ args:
 	outfile: output file to save the weights to
 """
 def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, outputs):
-	# Get random value for v1, v2 bias
-	v1 = v2 = round(r.uniform(-0.5, 0.5), 2)
+	# Hardcode value for  for v1, v2 bias
+	v1 = v2 = bias[2] = .5
+	print(bias[2])
 	print('Epochs equals: ', epochs)
 	x = [] # to store x inputs
 	t = [] # to store t outputs
@@ -50,8 +51,7 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, output
 	a, b, c = 0, 1, 2 # for the bias/weights
 	count = 0 # keep track of number of inputs we've done so far
 	era = 0 # Keep track of number of epochs
-	converged = 0
-	outs = []
+	converged = 0 # Check if we've converged
 
 	# Store each training pair, s:t 
 	for i,tset in enumerate(tsets):
@@ -89,7 +89,7 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, output
 				print('Converged equals ', converged)
 				# Check if we've converged
 				if converged >= pairs: # Means we haven't updated weights for each pair
-					print('Training converged after {x} epochs'.format(x=era))
+					print('Training converged after {x} epochs'.format(x=era+1))
 					stop = True
 					# Write to output file
 					with open(outfile, "w") as store:
@@ -102,8 +102,16 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, output
 			elif t[i][a] == 1.0 and (z1 == -1 and z2 == -1): # check if t = 1 and z1/z2 = -1
 				val = min((z_in1, z_in2), key=lambda x: abs(x - 0)) # Get z value closest to 0
 				print('This is the minimum value: ', val)
-				if val == z_in1:
-					# Update bias and weight values
+				if val == z_in1 and val == z_in2: # Both Z_in1/z_in2 are equal
+					print('Z_in1 and Z_in2 are equal, so update just z_in1')
+					# Update bias and weight values of z_in1
+					bias[a] = round(bias[a] + rate * (1 - z_in1), 2)
+					weights[a][a] = round(weights[a][a] + rate * (1 - z_in1) * x[i][a], 2)
+					weights[b][a] = round(weights[b][a] + rate * (1 - z_in1) * x[i][b], 2)
+					print('T = 1, Updated bias[0]: ', bias[a])
+					print('T = 1, Updated weights: ', weights)
+				if val == z_in1: # Both Z_in1/z_in2 are equal
+					# Update bias and weight values of z_in1
 					bias[a] = round(bias[a] + rate * (1 - z_in1), 2)
 					weights[a][a] = round(weights[a][a] + rate * (1 - z_in1) * x[i][a], 2)
 					weights[b][a] = round(weights[b][a] + rate * (1 - z_in1) * x[i][b], 2)
@@ -121,7 +129,7 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, output
 					converged = 0
 			# t = -1 and z1 0r z2 = 1
 			elif t[i][a] == -1.0 and (z1 == 1 or z2 ==1):
-				# Both z_in1 and z_in2 have positive inputs
+				# Both z_in1 and z_in2 have positive inputs 
 				if z_in1 >= 0 and z_in2 >= 0:
 					print('both positive')
 					# update bias'
