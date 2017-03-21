@@ -5,6 +5,7 @@ import madmenu as mm
 import random as r
 import os
 import time
+import sys
 
 """
 class for Training Net
@@ -43,7 +44,11 @@ args:
 def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, outputs):
 	# Hardcode value for  for v1, v2 bias
 	v1 = v2 = bias[2] = .5
-	print(bias[2])
+	# Testing with specific values
+	# weights = [[.05, .1], [.2, .2]]
+	# bias = [.3, .15, .5]
+	print('This is the bias ', bias)
+	print('These are the weights: ', weights)
 	print('Epochs equals: ', epochs)
 	x = [] # to store x inputs
 	t = [] # to store t outputs
@@ -221,6 +226,68 @@ def readToStore(aFile):
 		os.system('clear')
 		main()
 
+"""
+Get the weights for the samples
+"""
+def gimmeWeights():
+	try:
+		# Get/store weights
+		weights = int(input("\nEnter '0' to initialize weights to zero, or enter '1'" 
+			+ "to initialize weights to random values between -0.5 and 0.5:\n>> "))
+		if weights not in range(0, 2):
+			print("The value needs to be either a 0 or a 1\n")
+			initializeIt()
+		return weights
+	except ValueError:
+		print('The value needs to be either a 0 or a 1')
+		gimmeWeights()
+"""
+Get number of epochs for training the NN
+"""
+def howLong():
+	try:
+		# Store number of user defined epochs
+		epochs = int(input("\nEnter the max number of training epochs: \n>> "))
+		if epochs <= 0:
+			print('The number of epochs need to be greater than 0')
+			howLong()
+		return epochs
+	except ValueError:
+		print('The number of epochs need to be a whole number, greater than 0')
+		howLong()
+
+"""
+Function to get the learning rate for NN
+"""
+def howFast():
+	try:
+		# Get learning rate alpha
+		rate = float(input("\nEnter learning rate alpha from 0 to 1 (not including 0):\n>>  "))
+		if not 0 < rate <= 1:
+			print("Your alpha value needs to be between 0 and 1, but not including 0.\n>>")
+			howFast()
+	except ValueError:
+		print('The learning rate needs to be a decimal between 0 (but not including 0) and 1')
+		howFast()
+	return rate
+
+"""
+Function to get the output file for either the training or testing file
+"""
+def storeMe():
+	try:
+		# Get output file name for results
+		outfile = input("Enter the file name where the results will be saved: \n>>")
+		if os.path.exists(outfile) and not os.stat(outfile).st_size == 0:
+			print('Try again, that file is not empty') 
+			storeMe() 
+		if not outfile.endswith('.txt'):
+			print('You need to enter a text file')
+			storeMe()
+	except ValueError:
+		print('I need a text file that is empty mija')
+		storeMe()
+	return outfile
 
 """
 Function to gather the weights, epochs, rates and output file name 
@@ -228,44 +295,24 @@ Function to gather the weights, epochs, rates and output file name
 """
 def initializeIt():
 	try:
-		weights = int(input("\nEnter '0' to initialize weights to zero, or enter '1'" 
-			+ "to initialize weights to random values between -0.5 and 0.5:\n>> "))
-		if weights not in range(0, 2):
-			print("The value needs to be either a 0 or a 1\n")
-			initializeIt()
-		# Store number of user defined epochs
-		epochs = int(input("\nEnter the max number of training epochs: \n>> "))
-		# Get learning rate alpha
-		rate = float(input("\nEnter learning rate alpha from 0 to 1 (not including 0):\n>>  "))
-		if not 0 < rate <= 1:
-			print("Your alpha value needs to be between 0 and 1, but not including 0.\n>>")
-			initializeIt()
-		# Get output file name
-		outfile = input("Enter the file name where the weights will be saved: \n>>")
-		if os.path.exists(outfile) and not os.stat(outfile).st_size == 0:
-			print('Try again, that file is not empty') 
-			initializeIt() 
-		if not outfile.endswith('.txt'):
-			print('You need to enter a text file')
-			initializeIt()
+		# Get and store weights, epochs, rates and the name of the output file
+		weights = gimmeWeights()
+		epochs = howLong()
+		rate = howFast()
+		outfile = storeMe()
 	except KeyboardInterrupt:
 		sys.exit()
-	except ValueError:
-		print("\nYou entered an incorrect value, please try again")
-		time.sleep(1)
-		os.system('clear')
-		initializeIt()
 	return weights, epochs, rate, outfile
 
 def main():
-	global weights, epochs, rate, outfile, ins, outs, pairs, tsets
 	# Greet/get initial input file
 	infile = mm.greetIn()
 	contents = readToStore(infile)
 	ins, outs, pairs, tsets = contents
-	# Call menu 
-	mm.menu()
+	# To make the menu repeat each time
 	while(1):
+		# Call menu 
+		mm.menu()
 		try:
 			# Store choice and call cooresponding menu action
 			choice = int(input(">>> "))
@@ -276,11 +323,11 @@ def main():
 				t = Training(ins, outs, pairs, weights, tsets)
 				# Store output file from training
 				of = trainAlgo(t.tset, t.bias, rate, epochs, t.weights, t.pairs, t.inputs, outfile, t.outputs)
-				"""
-				Will need to call new prompt
-				"""
-				break
-			mm.pick_one(choice)
+				continue
+			# Testing the NN
+			elif choice == 2: 
+				val = mm.pick_one(choice)
+			# mm.pick_one(choice)
 			break
 		except ValueError:
 			print('Need to enter a number that matches one of the options')
