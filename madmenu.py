@@ -63,10 +63,14 @@ def greetIn():
             greetIn()
     '''
 
+"""
+After we've trained the NN, we'll find out if we're going to test or 
+"""
+
 # Options for menu
 menu_choice = {"menu": menu,
         1: m.initializeIt, # Call main from madaline.py
-        # 2: train_weight,
+        2: m.storeMe,
         #3: file_test,
         3: sys.exit
         }
