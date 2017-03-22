@@ -1,0 +1,4 @@
+The input pair [1.0, 1.0], maps to 1.
+The input pair [1.0, -1.0], maps to 1.
+The input pair [-1.0, 1.0], maps to 1.
+The input pair [-1.0, -1.0], maps to -1.
