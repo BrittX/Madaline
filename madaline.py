@@ -100,7 +100,8 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, thresh
 					print('Training converged after {x} epochs'.format(x=era))
 					# Write to output file
 					with open(outfile, "w") as store:
-						store.write("%d\n%d\n\n%s\n%s\n%.2f\n%.2f" %(inputs, pairs, weights, bias, v1, v2))
+						store.write("%d\n\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f" %(inputs, weights[a][a], weights[a][b], weights[b][a], weights[b][b], bias[a], bias[b], bias[c], v1, v2))
+						# store.write("%d\n%d\n\n%s\n%s\n%.2f\n%.2f" %(inputs, pairs, weights, bias, v1, v2))
 					store.close()
 					break
 				continue
@@ -116,7 +117,7 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, thresh
 				czin22 = upWeights(rate, 1, z_in2, x[i][b])
 				# Both Z_in1/z_in2 are equal
 				if val == z_in1 and val == z_in2: 
-					pick = randint(1, 2)
+					pick = r.randint(1, 2)
 					if pick == 1:
 						print('Z_in1 and Z_in2 are equal, so update just z_in1')
 						if czin1 < threshold and czin11 < threshold and cb1 < threshold:
@@ -129,7 +130,8 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, thresh
 								print('Training converged after {x} epochs'.format(x=era))
 								# Write to output file
 								with open(outfile, "w") as store:
-									store.write("%d\n%d\n\n%s\n%s\n%.2f\n%.2f" %(inputs, pairs, weights, bias, v1, v2))
+									store.write("%d\n\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f" %(inputs, weights[a][a], weights[a][b], weights[b][a], weights[b][b], bias[a], bias[b], bias[c], v1, v2))
+									# store.write("%d\n%d\n\n%s\n%s\n%.2f\n%.2f" %(inputs, pairs, weights, bias, v1, v2))
 								store.close()
 							break
 							continue
@@ -152,7 +154,8 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, thresh
 								print('Training converged after {x} epochs'.format(x=era))
 								# Write to output file
 								with open(outfile, "w") as store:
-									store.write("%d\n%d\n\n%s\n%s\n%.2f\n%.2f" %(inputs, pairs, weights, bias, v1, v2))
+									store.write("%d\n\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f" %(inputs, weights[a][a], weights[a][b], weights[b][a], weights[b][b], bias[a], bias[b], bias[c], v1, v2))
+									# store.write("%d\n%d\n\n%s\n%s\n%.2f\n%.2f" %(inputs, pairs, weights, bias, v1, v2))
 								store.close()
 								break
 							continue
@@ -176,7 +179,8 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, thresh
 							print('Training converged after {x} epochs'.format(x=era))
 							# Write to output file
 							with open(outfile, "w") as store:
-								store.write("%d\n%s\n%s\n%.2f\n%.2f" %(inputs, weights, bias, v1, v2))
+								store.write("%d\n\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f" %(inputs, weights[a][a], weights[a][b], weights[b][a], weights[b][b], bias[a], bias[b], bias[c], v1, v2))
+								# store.write("%d\n%s\n%s\n%.2f\n%.2f" %(inputs, weights, bias, v1, v2))
 							store.close()
 							break
 						continue
@@ -200,7 +204,8 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, thresh
 							print('Training converged after {x} epochs'.format(x=era))
 							# Write to output file
 							with open(outfile, "w") as store:
-								store.write("%d\n%s\n%s\n%.2f\n%.2f" %(inputs, weights, bias, v1, v2))
+								store.write("%d\n\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f" %(inputs, weights[a][a], weights[a][b], weights[b][a], weights[b][b], bias[a], bias[b], bias[c], v1, v2))
+								# store.write("%d\n%s\n%s\n%.2f\n%.2f" %(inputs, weights, bias, v1, v2))
 							store.close()
 							break
 						continue
@@ -232,7 +237,8 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, thresh
 							print('Training converged after {x} epochs'.format(x=era))
 							# Write to output file
 							with open(outfile, "w") as store:
-								store.write("%d\n%s\n%s\n%.2f\n%.2f" %(inputs, weights, bias, v1, v2))
+								store.write("%d\n\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f" %(inputs, weights[a][a], weights[a][b], weights[b][a], weights[b][b], bias[a], bias[b], bias[c], v1, v2))
+								# store.write("%d\n%s\n%s\n%.2f\n%.2f" %(inputs, weights, bias, v1, v2))
 							store.close()
 							break
 						continue
@@ -260,7 +266,8 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, thresh
 							print('Training converged after {x} epochs'.format(x=era))
 							# Write to output file
 							with open(outfile, "w") as store:
-								store.write("%d\n%s\n%s\n%.2f\n%.2f" %(inputs, weights, bias, v1, v2))
+								store.write("%d\n\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f" %(inputs, weights[a][a], weights[a][b], weights[b][a], weights[b][b], bias[a], bias[b], bias[c], v1, v2))
+								# store.write("%d\n%s\n%s\n%.2f\n%.2f" %(inputs, weights, bias, v1, v2))
 							store.close()
 							break
 						continue
@@ -284,7 +291,8 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, thresh
 							print('Training converged after {x} epochs'.format(x=era))
 							# Write to output file
 							with open(outfile, "w") as store:
-								store.write("%d\n%s\n%s\n%.2f\n%.2f" %(inputs, weights, bias, v1, v2))
+								store.write("%d\n\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f" %(inputs, weights[a][a], weights[a][b], weights[b][a], weights[b][b], bias[a], bias[b], bias[c], v1, v2))
+								# store.write("%d\n%s\n%s\n%.2f\n%.2f" %(inputs, weights, bias, v1, v2))
 							store.close()
 							break
 						continue
@@ -305,7 +313,7 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, thresh
 			print('Training converged after {x} epochs'.format(x=era))
 			# Write to output file
 			with open(outfile, "w") as store:
-				store.write("%d\n%s\n%s\n%.2f\n%.2f" %(inputs, weights, bias, v1, v2))
+				store.write("%d\n\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f\n%.2f" %(inputs, weights[a][a], weights[a][b], weights[b][a], weights[b][b], bias[a], bias[b], bias[c], v1, v2))
 			store.close()
 			return outfile
 			
@@ -514,7 +522,36 @@ def testIt():
 	except KeyboardInterrupt:
 		sys.exit()
 	return outfile, ins, pairs, tstset, trainFile
-	# return tstfile, outfile
+
+"""
+Function to get the contents of the trained weights file
+"""
+def trainResults(trained):
+	tins = 0
+	weights = []
+	bias = []
+	v1 = v2 = 0
+	# Open and store contents of data file
+	with open(trained) as train:
+		contents = train.readlines()
+	for i, line in enumerate(contents):
+		if i == 0: 
+			tins = line
+			tins = int(tins)
+		if 2 <= i <= 5 : # store weights
+			x = line.strip()
+			weights.append(x)
+		if 6 <= i <= 8: # store bias
+			x = line.strip()
+			bias.append(x)
+		if i == 9:
+			v1 = line
+			v1 = float(line)
+		if i == 10:
+			v2 = line
+			v2 = float(v2)
+	return tins, weights, bias, v1, v2
+
 """
 Function to test the trained NN
 
@@ -524,16 +561,42 @@ arg:
 	bias - weights of the bias' from the trained NN
 	v1/v2 - the weights going into the output layer from the hidden layer
 """
-def testNN(weights, tstset, bias, v1, v2):
+def testNN(weights, tstset, bias, v1, v2, pairs, outputfile):
 	x = []
+	tstset = [list(map(float, lst)) for lst in tstset]
+	a, b, c, d = 0, 1, 2, 3
+	for i, item in enumerate(bias):
+		bias[i] = float(item)
+	for i, item in enumerate(weights):
+		weights[i] = float(item)
+	# weights = [list(map(float, lst)) for lst in weights]
+	# bias = [list(map(float, lst)) for lst in bias]
 	# Store each training pair, s:t 
 	for tset in tstset:
-		if tset != '':
+		if tset != []:
 			x.append(tset)
-	print(x)
-	print('The weights are: ', weights)
-	print('The bias are: ', bias)
-	print('The v1 is: ', v1)
+	store = open(outputfile, 'w')
+	# multiply each input pair by weights
+	for i in range(pairs):
+		z_in1 = round(bias[a] + (x[i][a] * weights[a]) + (x[i][b] * weights[c]), 2)
+		z_in2 = round(bias[b] + (x[i][a] * weights[b]) + (x[i][b] * weights[d]), 2)
+
+		print(z_in1)
+		print(z_in2)
+
+		z1 = activateF(z_in1)
+		z2 = activateF(z_in2)
+
+		print(z1)
+		print(z2)
+
+		y_in = round(bias[c] + (z1 * v1) + (z2 * v2), 2)
+
+		y = activateF(y_in)
+
+		store.write("The input pair %s, maps to %d.\n" %(x[i], y))
+		print('This pair is outputted as: ', y)
+	store.close()
 	
 def main():
 	# Greet/get initial input file
@@ -560,11 +623,10 @@ def main():
 				# Store values from testIt
 				val = mm.pick_one(choice)
 				ofile, ins, pairs, tstset, trainFile = val
-				print('I get here')
-				testNN(weights, tstset, bias, v1, v2)
-				#continue
-				# outF = storeMe() # Get output file to store the results
-			# mm.pick_one(choice)
+				val = trainResults(trainFile)
+				tins, weights, bias, v1, v2 = val
+				testNN(weights, tstset, bias, v1, v2, pairs, ofile)
+				continue
 			break
 		except ValueError:
 			print('Need to enter a number that matches one of the options')
