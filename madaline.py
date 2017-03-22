@@ -176,7 +176,7 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, thresh
 							print('Training converged after {x} epochs'.format(x=era))
 							# Write to output file
 							with open(outfile, "w") as store:
-								store.write("%d\n%d\n\n%s\n%s\n%.2f\n%.2f" %(inputs, pairs, weights, bias, v1, v2))
+								store.write("%d\n%s\n%s\n%.2f\n%.2f" %(inputs, weights, bias, v1, v2))
 							store.close()
 							break
 						continue
@@ -200,7 +200,7 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, thresh
 							print('Training converged after {x} epochs'.format(x=era))
 							# Write to output file
 							with open(outfile, "w") as store:
-								store.write("%d\n%d\n\n%s\n%s\n%.2f\n%.2f" %(inputs, pairs, weights, bias, v1, v2))
+								store.write("%d\n%s\n%s\n%.2f\n%.2f" %(inputs, weights, bias, v1, v2))
 							store.close()
 							break
 						continue
@@ -232,7 +232,7 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, thresh
 							print('Training converged after {x} epochs'.format(x=era))
 							# Write to output file
 							with open(outfile, "w") as store:
-								store.write("%d\n%d\n\n%s\n%s\n%.2f\n%.2f" %(inputs, pairs, weights, bias, v1, v2))
+								store.write("%d\n%s\n%s\n%.2f\n%.2f" %(inputs, weights, bias, v1, v2))
 							store.close()
 							break
 						continue
@@ -260,7 +260,7 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, thresh
 							print('Training converged after {x} epochs'.format(x=era))
 							# Write to output file
 							with open(outfile, "w") as store:
-								store.write("%d\n%d\n\n%s\n%s\n%.2f\n%.2f" %(inputs, pairs, weights, bias, v1, v2))
+								store.write("%d\n%s\n%s\n%.2f\n%.2f" %(inputs, weights, bias, v1, v2))
 							store.close()
 							break
 						continue
@@ -284,7 +284,7 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, thresh
 							print('Training converged after {x} epochs'.format(x=era))
 							# Write to output file
 							with open(outfile, "w") as store:
-								store.write("%d\n%d\n\n%s\n%s\n%.2f\n%.2f" %(inputs, pairs, weights, bias, v1, v2))
+								store.write("%d\n%s\n%s\n%.2f\n%.2f" %(inputs, weights, bias, v1, v2))
 							store.close()
 							break
 						continue
@@ -305,7 +305,7 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, thresh
 			print('Training converged after {x} epochs'.format(x=era))
 			# Write to output file
 			with open(outfile, "w") as store:
-				store.write("%d\n%d\n\n%s\n%s\n%.2f\n%.2f" %(inputs, pairs, weights, bias, v1, v2))
+				store.write("%d\n%s\n%s\n%.2f\n%.2f" %(inputs, weights, bias, v1, v2))
 			store.close()
 			return outfile
 			
@@ -420,12 +420,13 @@ def storeMe():
 	return outfile
 
 """
-Function to get the testing file for the NN
+Function to get the testing file and trained file for the NN
 """
 def getMe():
 	try:
 		# Get testing file for NN
 		tFile = input("\nEnter the file name of the inputs you'd like to test: \n>>")
+		trainFile = input("\n Enter the file name of the trained Madaline results: \n>>")
 		# Check if file doesn't exist or it's empty
 		if not os.path.exists(tFile) or not os.path.getsize(tFile) > 0:
 			print('The file entered needs to be a non-empty file')
@@ -437,7 +438,7 @@ def getMe():
 	except ValueError:
 		print('Please enter a non-empty testing file')
 		getMe()
-	return tFile
+	return tFile, trainFile
 
 """
 Function to get the threshold from the user for checking when we've converged
@@ -478,7 +479,7 @@ arg:
 def read2Store(testfile):
 	try:
 		tests = []
-			# Open and store contents of data file
+		# Open and store contents of data file
 		with open(testfile) as t_open:
 			contents = t_open.readlines()
 		# Read through specific lines to store input, pairs and testing sets
@@ -493,6 +494,7 @@ def read2Store(testfile):
 			else:
 				x = line.strip()
 				tests.append(x.split())
+		t_open.close()
 	except TypeError:
 		print("Invalid File")
 		os.system('clear')
@@ -505,13 +507,13 @@ Function to get both the testing file and the trained NN weights
 def testIt():
 	try:
 		# Gets the test file and the inputs, pairs and tsetset
-		tstfile = getMe()
+		tstfile, trainFile = getMe()
 		ins, pairs, tstset = read2Store(tstfile)
 		# Get empty output file for the results
 		outfile = storeMe()
 	except KeyboardInterrupt:
 		sys.exit()
-	return outfile, ins, pairs, tstset
+	return outfile, ins, pairs, tstset, trainFile
 	# return tstfile, outfile
 """
 Function to test the trained NN
@@ -528,10 +530,11 @@ def testNN(weights, tstset, bias, v1, v2):
 	for tset in tstset:
 		if tset != '':
 			x.append(tset)
+	print(x)
+	print('The weights are: ', weights)
+	print('The bias are: ', bias)
+	print('The v1 is: ', v1)
 	
-
-
-
 def main():
 	# Greet/get initial input file
 	infile = mm.greetIn()
@@ -556,9 +559,9 @@ def main():
 			if choice == 2: 
 				# Store values from testIt
 				val = mm.pick_one(choice)
-				ofile, ins, pairs, tstset = val
+				ofile, ins, pairs, tstset, trainFile = val
 				print('I get here')
-				testNN(0, tstset, 0, 0, 0)
+				testNN(weights, tstset, bias, v1, v2)
 				#continue
 				# outF = storeMe() # Get output file to store the results
 			# mm.pick_one(choice)
