@@ -243,8 +243,8 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, thresh
 						weights[b][b] = round(weights[b][b] + czin22)
 						weights[b][a] = round(weights[b][a] + czin11)
 						# update bias
-						bias[a] = bias[a] + cb1
-						bias[b] = bias[b] + cb2
+						bias[a] = round(bias[a] + cb1, 2)
+						bias[b] = round(bias[b] + cb2, 2)
 						if converged > 0: converged = 0
 						continue
 				# Only z_in1 is positive
@@ -269,7 +269,7 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, thresh
 						weights[a][a] = round(weights[a][a] + czin1)
 						weights[b][a] = round(weights[b][a] + czin11)
 						# update bias
-						bias[a] = bias[a] + cb1
+						bias[a] = round(bias[a] + cb1, 2)
 						if converged > 0: converged = 0
 						continue
 				elif z_in2 >= 0: # just z_in2 is greater than 0
@@ -292,7 +292,7 @@ def trainAlgo(tsets, bias, rate, epochs, weights, pairs, inputs, outfile, thresh
 						weights[a][b] = round(weights[a][b] + czin2)
 						weights[b][b] = round(weights[b][b] + czin22)
 						# update bias
-						bias[b] = bias[b] + cb2
+						bias[b] = round(bias[b] + cb2, 2)
 						if converged > 0: converged = 0
 						continue
 		# Check if we've gone through the number of training pairs
